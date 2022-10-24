@@ -136,7 +136,7 @@ if __name__ == '__main__':
     # user_id = bot.user_id_from_username("kimkardashian")
     # list = bot.get_following_usernames(user_id,100)
     # print (list)
-    # print(len(list))
+    # print(len(list))  cvcvcv
 
     cl = Client()
     cl.login("pasindusamaranayake", "crowmaster201")
