@@ -5,6 +5,7 @@ from typing import Dict, List
 from instagrapi import Client
 from instagrapi.types import UserShort
 from database.database import SqliteDB  as sql
+from models.userModel import instaPerson
 
 IG_USERNAME = 'pasindusamaranayake'
 IG_PASSWORD = 'adalanane'
@@ -133,6 +134,12 @@ class Bot:
 
 
 if __name__ == '__main__':
+
+    db = sql()
+    instaperson = instaPerson("hasi","instaID")
+
+    db.adduser(instaperson)
+
     # bot = Bot()
     # user_id = bot.user_id_from_username("kimkardashian")
     # list = bot.get_following_usernames(user_id,100)
@@ -152,4 +159,4 @@ if __name__ == '__main__':
     #     count+=1
     #     print(f"Number {count}:={user.username}")
 
-    pass
+
