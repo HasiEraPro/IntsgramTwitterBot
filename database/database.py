@@ -1,14 +1,16 @@
 import sqlite3
+from os.path import isfile
 
 
 class SqliteDB:
 
     def __init__(self):
-
+        self.db_file = r'database/instagram.db'
         pass
 
         # this runs at first time of the db creation
-        # self.firsttimerun()
+        if not isfile(self.db_file):
+            self.firsttimerun()
 
 
     def firsttimerun(self):
@@ -64,10 +66,10 @@ class SqliteDB:
             con.close()
 
     def createDatabaseConnection(self):
-        db_file = r'database/instagram.db'
+
         conn = None
         try:
-            conn = sqlite3.connect(db_file)
+            conn = sqlite3.connect(self.db_file)
         except Exception as e:
             print(f"Databse connection failed:={e}")
 
