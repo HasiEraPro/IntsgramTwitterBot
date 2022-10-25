@@ -4,6 +4,7 @@ from typing import Dict, List
 
 from instagrapi import Client
 from instagrapi.types import UserShort
+from database.database import SqliteDB  as sql
 
 IG_USERNAME = 'pasindusamaranayake'
 IG_PASSWORD = 'adalanane'
@@ -138,17 +139,17 @@ if __name__ == '__main__':
     # print (list)
     # print(len(list))  cvcvcv
 
-    cl = Client()
-    cl.login("pasindusamaranayake", "crowmaster201")
+    # cl = Client()
+    # cl.login("pasindusamaranayake", "crowmaster201")
+    #
+    # user_id = cl.user_id_from_username("kimkardashian")
+    #
+    # print(user_id)
+    # followers = cl.user_following(user_id, 7500)
+    #
+    # count =0
+    # for user in followers.values():
+    #     count+=1
+    #     print(f"Number {count}:={user.username}")
 
-    user_id = cl.user_id_from_username("kimkardashian")
-
-    print(user_id)
-    followers = cl.user_following(user_id, 7500)
-
-    count =0
-    for user in followers.values():
-        count+=1
-        print(f"Number {count}:={user.username}")
-
-
+    pass
