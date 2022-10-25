@@ -35,7 +35,7 @@ class Bot:
         Returns
         -------
         bool
-            A boolean value
+            A boolean value is set
         """
         userid = self._cl.user_id_from_username(username)
         return self._cl.user_follow(userid)
