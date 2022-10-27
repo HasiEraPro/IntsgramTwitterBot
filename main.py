@@ -5,7 +5,7 @@ from typing import Dict, List
 from instagrapi import Client
 from instagrapi.types import UserShort
 from database.database import SqliteDB  as sql
-from models.userModel import instaPerson
+
 
 IG_USERNAME = 'pasindusamaranayake'
 IG_PASSWORD = 'adalanane'
@@ -133,12 +133,75 @@ class Bot:
         pass
 
 
+def loop():
+    # init db ,if db not initialised  initialise it
+    dbLite = sql()
+
+    # initialise bot
+    cl = Client()
+    cl.login("pasindusamaranayake", "crowmaster201")
+
+    allusers = dbLite.getallusers()
+    newUSer = False
+
+    for user in allusers:
+
+        #get the user id of the database using insta name
+        userRowID = dbLite.getIdOfTheUser(user)
+
+        #if user has no entry inside the database add user into the database
+        if userRowID == None:
+            dbLite.adduser(user)
+            userRowID = dbLite.getIdOfTheUser(user)
+
+
+        #get user id from instagram API
+        instaAPIuserID = cl.user_id_from_username(user)
+
+        #take all following people of the users using above instagram API
+        followingActually = cl.user_following(instaAPIuserID, amount=7500)
+
+
+
+        #if a new user user has no list of following inside the database,so we add all the following into db
+        if newUSer:
+            dbLite.addfollowers(followingActually,user)
+            newUSer = False
+            continue
+
+        else:
+            # take all the following people of the user inside db
+            followinginDB = dbLite.getlistoffollowing(user)
+
+            #what names inside database and dont have in the actual list
+            unfollowedPerson = compareLists(followinginDB,followingActually)
+
+            #names we have inside actual list which dont have inside database
+            newfollowedPerson = compareLists(followingActually,followinginDB)
+
+
+
+def compareLists(list1,list2):
+    s = set(list2)
+    temp3 = set(list1) - set(list2)
+    print(temp3)
+    return temp3
+
 if __name__ == '__main__':
+    # dbLite = sql()
+    # result = dbLite.getlistoffollowing("instaId")
+    # print(result)
 
-    db = sql()
-    instaperson = instaPerson("hasi","instaID")
+    dblist = ["follower1","follower2","follower4"]
+    actualList = ["follower3", "follower2"]
 
-    db.adduser(instaperson)
+    # unfollowedPerson = compareLists(dblist,actualList)
+    #
+    # newfollowedPerson = compareLists(actualList,dblist)
+
+
+
+
 
     # bot = Bot()
     # user_id = bot.user_id_from_username("kimkardashian")
