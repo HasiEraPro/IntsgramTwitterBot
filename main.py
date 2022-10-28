@@ -5,7 +5,7 @@ from typing import Dict, List
 from instagrapi import Client
 from instagrapi.types import UserShort
 from database.database import SqliteDB  as sql
-
+import tweet
 
 IG_USERNAME = 'pasindusamaranayake'
 IG_PASSWORD = 'adalanane'
