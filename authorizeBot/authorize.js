@@ -4,8 +4,8 @@ var app = express();
 var twitterAPI = require('node-twitter-api');
 var twitter = new twitterAPI({
 	// application keys for your application
-    consumerKey: 'EWkP4LreABvdoPjC6cuQ8cTyq',
-    consumerSecret: 'yQQ5cIr7iGgdRtRFiyj1F4W1VaGKOBLkgPPOPT3BvnWUEqPGTt',
+    consumerKey: '',
+    consumerSecret: '',
     callback: 'http://localhost:3456/auth'
 });
 
