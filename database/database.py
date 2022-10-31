@@ -1,6 +1,6 @@
 import sqlite3
 from os.path import isfile
-
+from insta import cl
 
 class SqliteDB:
 
@@ -16,7 +16,7 @@ class SqliteDB:
         # Database connection
         con = self.createDatabaseConnection()
         cur = con.cursor()
-
+        print("First time run Database")
         try:
 
             cur.execute('''CREATE TABLE users (
@@ -48,17 +48,21 @@ class SqliteDB:
 
         con = self.createDatabaseConnection()
         cur = con.cursor()
+        error = False
         try:
+            #check the given username is valid in instagram
+            print(f"user {instaUserName} is valid ID:={cl.user_id_from_username(instaUserName)}")
 
             sql = '''INSERT INTO users (INSTA_ID) VALUES(?)'''
             cur.execute(sql, [instaUserName])
             print(f"Successfully added user:{instaUserName}")
         except Exception as e:
             print(f"Coudnt insert user into db:={e}")
-
+            error = True
         finally:
             con.commit()
             con.close()
+            return error
 
     def addfollowers(self,followerList ,instauserName):
 
@@ -74,7 +78,7 @@ class SqliteDB:
 
                 cur.execute(sql, [follower, userId])
 
-            print(f"Successfully added {len(followerList)} users")
+            print(f"Successfully added {len(followerList)} of  following people")
         except Exception as e:
             print(f"Coudnt insert user into db:={e}")
 
@@ -130,7 +134,7 @@ class SqliteDB:
                     for item in result:
                         followingList.append(item[0])
 
-                    print(f"following list of the user {userinstaName} are {followingList}")
+                    print(f"there are {len(followingList)} of following inside db of user {userinstaName}")
                 else:
                     print(f"following list is empty or  no following")
 
@@ -157,9 +161,10 @@ class SqliteDB:
 
             sql = f'SELECT INSTA_ID from users '
 
-            fullUserList = cur.execute(sql).fetchall()
+            for row in cur.execute(sql).fetchall():
+                fullUserList.append(row[0])
 
-            print(f"total {len(fullUserList)} number of users found")
+            print(f"there are {len(fullUserList) } of users inside db")
 
         except Exception as e:
             print(f"following people not found:={e}")
@@ -179,8 +184,6 @@ class SqliteDB:
             print(f"Databse connection failed:={e}")
 
         return conn
-    
 
-if __name__ == "__main__":
-    ##database instance creation
-    db = SqliteDB()
+
+dbLite = SqliteDB()
