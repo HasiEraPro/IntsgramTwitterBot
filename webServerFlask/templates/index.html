@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %} Home Page {% endblock %}
+
+{%  block content %}
+<div class="container-fluid">
+    <div class=" row ">
+        <div class="col-sm-12">
+            <h1 class="text-center">Tweet Instagram Status Bot</h1>
+        </div>
+
+    </div>
+    <div class="row mt-3">
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
+        </div>
+    <div class="row mt-3">
+
+        <div class="col-sm-6">
+            <h3>Current Users</h3>
+            <ol class="list-group list-group-numbered">
+                {% for user in users %}
+
+                <li class="list-group-item mt-1">{{user}}</li>
+
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="col-sm-6 mt-1">
+            <h3>Setup Bot</h3>
+
+            <form  method="post" >
+
+                <div class="form-group">
+                    <label for="instaName">Instagram User Name</label>
+                    <input type="text"
+                           class="form-control"
+                           name="instaName"
+                           id="instaName"
+                           placeholder="Insta name without @"
+                           value="{{ request.form['instaName'] }}"
+                           >
+
+                </div>
+
+                <div class="form-group mt-3">
+                   <label for="followtextarea">Follow Template</label>
+                    <textarea
+                            class="form-control"
+                            name="followTxt"
+                            id="followtextarea"
+                            rows="3"
+                            placeholder="text to tweet when someone follow"
+
+                    >{{ request.form['followTxt'] }}</textarea>
+                   <small class="form-text text-muted">use <strong>{user}</strong> for denote the user and ,use
+                    <strong>{followings}</strong> to denote followings of the user.
+                        Ex 1:= user {user} has followed {followings}
+                        will transform into=> user kimkardeshian has followed person1,person2
+                    </small>
+
+                </div>
+
+                 <div class="form-group mt-3">
+                    <label for="unfollowTxt">Unfollow Template</label>
+                    <textarea
+                            class="form-control"
+                            name="unfollowTxt"
+                            id="unfollowTxt"
+                            rows="3">{{ request.form['unfollowTxt'] }}</textarea>
+
+
+                     <small class="form-text text-muted">use <strong>{user}</strong> for denote the user and ,use
+                    <strong>{unfollowings}</strong> to denote unfollowings of the user.
+                        Ex 1:= user {user} has followed {unfollowings}
+                        will transform into=> user kimkardeshian has unfollowed person1,person2
+                    </small>
+                 </div>
+
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+{% endblock %}
+
+{ % endblock % }

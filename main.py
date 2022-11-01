@@ -1,5 +1,7 @@
+from datetime import time
+
 from database.database import dbLite
-from insta import cl
+#from insta import cl
 import tweet
 
 
@@ -58,29 +60,60 @@ def loop():
 
             print(f"user {user} has followed these persons {newfollowedPerson}")
             #if only new follwers are there
-            if len(newfollowedPerson) > 0 and len(unfollowedPerson) == 0:
-
+            if len(newfollowedPerson) > 0 :
+                followedString = ",".join(["@" + x for x in newfollowedPerson])
                 print(f"user {user} has new followings,starting tweets")
+                dbFollowingTxt = dbLite.getFollowerTweetText()
+
+                #replace all the occurences of users
+
+                replacedVersion1 = dbFollowingTxt.replace("{user}",followedString)
+
+                # replace all followings
+
+                replacedVersion2 = dbFollowingTxt.replace("{followings}", replacedVersion1)
+
+
                 #tweet follows people
-                tweet.tweetFollow(user,newfollowedPerson)
+                tweet.tweetMessage(replacedVersion2)
+
                 print(f"tweeting Ends")
 
-            #if unfollwed and followed has been done
-            elif len(newfollowedPerson) > 0 and len(unfollowedPerson) > 0:
-                print(f"user {user} has new followings and unfollowings,starting tweets")
-                followedString = ",".join(["@"+x for x in newfollowedPerson])
-                unfollowedString = ",".join(["@"+x for x in unfollowedPerson])
-
-                message = f"{user} has followed {followedString} and unfollowed {unfollowedString}"
-                print(f"tweeting this message {message}")
-                tweet.tweetMessage(message)
-                print(f"tweeting Ends")
+            # #if unfollwed and followed has been done
+            # elif len(newfollowedPerson) > 0 and len(unfollowedPerson) > 0:
+            #     print(f"user {user} has new followings and unfollowings,starting tweets")
+            #     followedString = ",".join(["@"+x for x in newfollowedPerson])
+            #     unfollowedString = ",".join(["@"+x for x in unfollowedPerson])
+            #
+            #     message = f"{user} has followed {followedString} and unfollowed {unfollowedString}"
+            #     print(f"tweeting this message {message}")
+            #     tweet.tweetMessage(message)
+            #     print(f"tweeting Ends")
 
             #if only new unfollowers are their
-            elif len(newfollowedPerson) == 0 and len(unfollowedPerson) > 0:
+            elif len(unfollowedPerson) > 0:
                 print(f"user {user} has unfollowings,start tweeting")
+
+                # create a string of all unfollowed peoples
+                unfollowedString = ",".join(["@"+x for x in unfollowedPerson])
+
+
+
+                #get unfollower tweet message from db
+                dbunFollowingTxt = dbLite.getunFollowerTweetText()
+
+                # replace all the occurences of users
+
+                replacedVersion1 = dbFollowingTxt.replace("{user}", dbunFollowingTxt)
+
+                # replace all followings
+
+                replacedVersion2 = dbFollowingTxt.replace("{unfollowings}", replacedVersion1)
+
+
                 # tweet unfollows people
-                tweet.tweetUnFollow(user, unfollowedPerson)
+
+                tweet.tweetMessage(replacedVersion2)
 
                 print(f"tweeting Ends")
 
@@ -95,8 +128,8 @@ def compareLists(list1,list2):
 
 if __name__ == '__main__':
 
-    loop()
-
+    #loop()
+    print(dbLite.getFollowerTweetText())
     #old code
     """
     # result = dbLite.getlistoffollowing("instaId")

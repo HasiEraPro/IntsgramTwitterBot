@@ -1,11 +1,12 @@
 import sqlite3
 from os.path import isfile
-from insta import cl
+
+import config
 
 class SqliteDB:
 
     def __init__(self):
-        self.db_file = r'database/instagram.db'
+        self.db_file = config.DB_FILE
 
         # this runs at first time of the db creation
         if not isfile(self.db_file):
@@ -48,9 +49,19 @@ class SqliteDB:
 
         con = self.createDatabaseConnection()
         cur = con.cursor()
-        error = False
+        error = None
         try:
+
+            #check user is already there or not
+            rowid = self.getIdOfTheUser(instaUserName)
+
+            if not rowid == None:
+                error = "user already here"
+                print("user already in database")
+                return
             #check the given username is valid in instagram
+            from insta import cl
+
             print(f"user {instaUserName} is valid ID:={cl.user_id_from_username(instaUserName)}")
 
             sql = '''INSERT INTO users (INSTA_ID) VALUES(?)'''
@@ -58,7 +69,7 @@ class SqliteDB:
             print(f"Successfully added user:{instaUserName}")
         except Exception as e:
             print(f"Coudnt insert user into db:={e}")
-            error = True
+            error = "user not instagram"
         finally:
             con.commit()
             con.close()
@@ -174,6 +185,70 @@ class SqliteDB:
             cur.close()
             con.close()
             return fullUserList
+
+    def addTemplateText(self,followText = None, unfollowText=None,combinationtext=None):
+        con = self.createDatabaseConnection()
+        cur = con.cursor()
+        print(f"i recived template data follow={followText} unfollow={unfollowText} combi={combinationtext}")
+        try:
+            sql = '''UPDATE templates SET FOLLOW_TEXT=?,UNFOLLOW_TEXT=?,COMBINED_TEXT=? WHERE TEMPL_ID=1'''
+            cur.execute(sql, [followText,unfollowText,combinationtext])
+
+            print(f"follow text:={followText} updated in db")
+            print(f"unfollow text:={unfollowText} updated in db")
+            print(f"combination text:={combinationtext} updated in db")
+
+
+
+        except Exception as e:
+            print(f"tweeter template text not added:={e}")
+
+        finally:
+            con.commit()
+            cur.close()
+            con.close()
+
+    def getFollowerTweetText(self):
+        con = self.createDatabaseConnection()
+        cur = con.cursor()
+        text = ""
+        try:
+            sql = f'SELECT FOLLOW_TEXT from templates WHERE TEMPL_ID=1 '
+
+            for row in cur.execute(sql).fetchall():
+                text = row[0]
+
+            print(f"found follwer tweet text = {text}")
+
+        except Exception as e:
+            print(f"Cant choose followers tweet text:={e}")
+
+        finally:
+            con.commit()
+            cur.close()
+            con.close()
+            return text
+
+    def getunFollowerTweetText(self):
+        con = self.createDatabaseConnection()
+        cur = con.cursor()
+        text = ""
+        try:
+            sql = f'SELECT UNFOLLOW_TEXT from templates WHERE TEMPL_ID=1 '
+
+            for row in cur.execute(sql).fetchall():
+                text = row[0]
+
+            print(f"found unfollwer tweet text = {text}")
+
+        except Exception as e:
+            print(f"Cant choose unfollowers tweet text:={e}")
+
+        finally:
+            con.commit()
+            cur.close()
+            con.close()
+            return text
 
     def createDatabaseConnection(self):
 
