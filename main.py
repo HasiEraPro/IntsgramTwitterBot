@@ -1,7 +1,6 @@
-from datetime import time
 
 from database.database import dbLite
-#from insta import cl
+from insta import cl
 import tweet
 
 
@@ -67,11 +66,11 @@ def loop():
 
                 #replace all the occurences of users
 
-                replacedVersion1 = dbFollowingTxt.replace("{user}",followedString)
+                replacedVersion1 = dbFollowingTxt.replace("{user}",user)
 
                 # replace all followings
 
-                replacedVersion2 = dbFollowingTxt.replace("{followings}", replacedVersion1)
+                replacedVersion2 = replacedVersion1.replace("{followings}", followedString)
 
 
                 #tweet follows people
@@ -104,11 +103,11 @@ def loop():
 
                 # replace all the occurences of users
 
-                replacedVersion1 = dbFollowingTxt.replace("{user}", dbunFollowingTxt)
+                replacedVersion1 = dbunFollowingTxt.replace("{user}", user)
 
                 # replace all followings
 
-                replacedVersion2 = dbFollowingTxt.replace("{unfollowings}", replacedVersion1)
+                replacedVersion2 = replacedVersion1.replace("{unfollowings}", unfollowedString)
 
 
                 # tweet unfollows people
@@ -128,8 +127,8 @@ def compareLists(list1,list2):
 
 if __name__ == '__main__':
 
-    #loop()
-    print(dbLite.getFollowerTweetText())
+    loop()
+    #print(dbLite.getFollowerTweetText())
     #old code
     """
     # result = dbLite.getlistoffollowing("instaId")
