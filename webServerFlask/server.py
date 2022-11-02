@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for,redirect,flash
 import sys
+sys.path.append('/home/h4si/instaBot/IntsgramTwitterBot')
 from database import dbLite
 
 app = Flask(__name__)
