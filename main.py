@@ -1,8 +1,8 @@
 
 from database import dbLite
-from insta import cl
+import requests
 import tweet
-
+import config
 
 def loop():
 
@@ -14,21 +14,18 @@ def loop():
         #get the user id of the database using insta name
         userRowID = dbLite.getIdOfTheUser(user)
 
-        try:
-            #get user id from instagram API
-            instaAPIuserID = cl.user_id_from_username(user)
-        except Exception as e:
-            print(f"insta ID not found of the user {user}")
-            continue
+
+        # get user id from instagram API
+        instaAPIuserID = dbLite.getinstaIDofuser(user)
 
         # take all the following people of the user inside db
         followinginDB = dbLite.getlistoffollowing(user)
 
-        #take all following people of the users using above instagram API
-        tempInstaDic = cl.user_following(instaAPIuserID, amount=7500)
+       #get followings from our API
+        query = {'instaID': instaAPIuserID}
+        response = requests.get(config.OUR_API_SERVER_FOLLOWINGS_END, params=query)
+        followingActually = response.json()["data"]
 
-        #extract user names from actualFollowingLists
-        followingActually = [user.username for user in tempInstaDic.values()]
 
 
         #if some user has no records of follwing inside the db
@@ -128,38 +125,6 @@ def compareLists(list1,list2):
 if __name__ == '__main__':
 
     loop()
-    #print(dbLite.getFollowerTweetText())
-    #old code
-    """
-    # result = dbLite.getlistoffollowing("instaId")
-    # print(result)
 
-    # dblist = ["follower1","follower2","follower4"]
-    # actualList = ["follower3", "follower2"]
 
-    # unfollowedPerson = compareLists(dblist,actualList)
-    #
-    # newfollowedPerson = compareLists(actualList,dblist)
-
-    # bot = Bot()
-    # user_id = bot.user_id_from_username("kimkardashian")
-    # list = bot.get_following_usernames(user_id,100)
-    # print (list)
-    # print(len(list))  cvcvcv
-
-    # cl = Client()
-    # cl.login("pasindusamaranayake", "crowmaster201")
-    #
-    #user_id = cl.user_id_from_username("kimkardashian")
-    #
-    # print(user_id)
-    #followers = cl.user_following(user_id, 10)
-
-   # print([user.username for user in followers.values()])
-    #
-    # count =0
-    # for user in followers.values():
-    #     count+=1
-    #     print(f"Number {count}:={user.username}")
-    """
 

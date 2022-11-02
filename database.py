@@ -22,12 +22,13 @@ class SqliteDB:
 
             cur.execute('''CREATE TABLE users (
                USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+               INSTA_NAME text,
                INSTA_ID text
            )''')
             print("Users Table Created")
             cur.execute('''CREATE TABLE following (
                        PERSON_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                       INSTA_ID text,
+                       INSTA_NAME text,
                        USER_ID INTEGER,
                        CONSTRAINT fk_users
                            FOREIGN KEY (USER_ID)
@@ -59,7 +60,7 @@ class SqliteDB:
             con.close()
 
     # add user into user table,we list the followers from this user
-    def adduser(self, instaUserName):
+    def adduser(self, instaUserName,instaID):
 
         con = self.createDatabaseConnection()
         cur = con.cursor()
@@ -73,14 +74,11 @@ class SqliteDB:
                 error = "user already here"
                 print("user already in database")
                 return
-            #check the given username is valid in instagram
-            from insta import cl
 
-            print(f"user {instaUserName} is valid ID:={cl.user_id_from_username(instaUserName)}")
 
-            sql = '''INSERT INTO users (INSTA_ID) VALUES(?)'''
-            cur.execute(sql, [instaUserName])
-            print(f"Successfully added user:{instaUserName}")
+            sql = '''INSERT INTO users (INSTA_NAME,INSTA_ID) VALUES(?,?)'''
+            cur.execute(sql, [instaUserName,instaID])
+            print(f"Successfully added user:{instaUserName} insta ID {instaID}")
         except Exception as e:
             print(f"Coudnt insert user into db:={e}")
             error = "user not instagram"
@@ -97,7 +95,7 @@ class SqliteDB:
         cur = con.cursor()
         try:
 
-            sql = '''INSERT INTO following (INSTA_ID,USER_ID) VALUES(?,?)'''
+            sql = '''INSERT INTO following (INSTA_NAME,USER_ID) VALUES(?,?)'''
 
             for follower in followerList:
 
@@ -112,24 +110,24 @@ class SqliteDB:
             con.close()
 
 
-    def getIdOfTheUser(self,instaID):
+    def getIdOfTheUser(self,instaName):
         con = self.createDatabaseConnection()
         cur = con.cursor()
         idFound = None
         id = None
         try:
 
-            sql = f'SELECT USER_ID from users WHERE (INSTA_ID=?)'
+            sql = f'SELECT USER_ID from users WHERE (INSTA_NAME=?)'
 
-            idFound = cur.execute(sql,[instaID]).fetchone()
+            idFound = cur.execute(sql,[instaName]).fetchone()
 
             if idFound is not None:
 
                 id = idFound[0]
-                print(f"User id of the {instaID} is {idFound[0]}")
+                print(f"User id of the {instaName} is {idFound[0]}")
 
             else:
-                print(f"User id of {instaID} not found")
+                print(f"User id of {instaName} not found")
 
         except Exception as e:
             print(f"Exception Id not found:={e}")
@@ -138,7 +136,35 @@ class SqliteDB:
             con.commit()
             con.close()
             return id
-    
+
+    def getinstaIDofuser(self,instaName):
+        con = self.createDatabaseConnection()
+        cur = con.cursor()
+        idFound = None
+        id = None
+        try:
+
+            sql = f'SELECT INSTA_ID from users WHERE (INSTA_NAME=?)'
+
+            idFound = cur.execute(sql, [instaName]).fetchone()
+
+            if idFound is not None:
+
+                id = idFound[0]
+                print(f"insta id of the {instaName} is {idFound[0]}")
+
+            else:
+
+                print(f"Insta id of {instaName} not found")
+
+        except Exception as e:
+            print(f"Exception Id not found:={e}")
+
+        finally:
+            con.commit()
+            con.close()
+            return id
+
     def getlistoffollowing(self,userinstaName):
 
         userId = self.getIdOfTheUser(userinstaName)
@@ -147,7 +173,7 @@ class SqliteDB:
         followingList = []
         try:
 
-            sql = f'SELECT INSTA_ID from following WHERE (USER_ID=?)'
+            sql = f'SELECT INSTA_NAME from following WHERE (USER_ID=?)'
 
             result = cur.execute(sql, [userId]).fetchall()
 
@@ -184,7 +210,7 @@ class SqliteDB:
 
         try:
 
-            sql = f'SELECT INSTA_ID from users '
+            sql = f'SELECT INSTA_NAME from users '
 
             for row in cur.execute(sql).fetchall():
                 fullUserList.append(row[0])

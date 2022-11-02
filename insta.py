@@ -3,6 +3,7 @@ from time import sleep
 from typing import Dict, List
 from instagrapi import Client
 from instagrapi.types import UserShort
+from instagrapi.exceptions import *
 import config
 
 SLEEP_TIME = '600'  # in seconds
