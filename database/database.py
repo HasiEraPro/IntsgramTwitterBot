@@ -7,7 +7,7 @@ class SqliteDB:
 
     def __init__(self):
         self.db_file = config.DB_FILE
-
+        print(f"db file path = {self.db_file}")
         # this runs at first time of the db creation
         if not isfile(self.db_file):
             self.firsttimerun()
@@ -36,6 +36,20 @@ class SqliteDB:
                    )''')
             print("follwing persons table Created")
 
+            cur.execute('''CREATE TABLE templates (
+                                   TEMPL_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                                   FOLLOW_TEXT text,
+                                   FOLLOW_TEXT text,
+                                   COMBINED_TEXT text
+
+                               )''')
+            cur.execute('''INSERT INTO templates (FOLLOW_TEXT,FOLLOW_TEXT,COMBINED_TEXT) 
+            VALUES 
+            ("{user} has follwed the {followings}",
+              "{user} has unfollowed the {unfollowings} " ,
+              "{user} has followed the {followings} and unfollowed the {unfollowings}" 
+            )''')
+            print("template table Created")
         except Exception as e:
             print(f"Error in table creation:={e}")
 
