@@ -1,5 +1,5 @@
 
-from database.database import dbLite
+from database import dbLite
 from insta import cl
 import tweet
 

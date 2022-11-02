@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for,redirect,flash
 import os
-from database.database import dbLite
+from database import dbLite
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
