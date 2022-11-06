@@ -4,6 +4,7 @@ from typing import Dict, List
 from instagrapi import Client
 from instagrapi.types import UserShort
 from instagrapi.exceptions import *
+
 import config
 
 SLEEP_TIME = '600'  # in seconds
@@ -14,12 +15,24 @@ class Bot:
 
     def __init__(self):
         self._cl = Client()
+        print(f"iq settings file in {config.IG_CREDENTIAL_PATH}  {os.path.exists(config.IG_CREDENTIAL_PATH)}")
         if os.path.exists(config.IG_CREDENTIAL_PATH):
+            print("insta bot using ig settings file")
             self._cl.load_settings(config.IG_CREDENTIAL_PATH)
             self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
         else:
             self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
             self._cl.dump_settings(config.IG_CREDENTIAL_PATH)
+
+    def is_user_valid(self,username) -> bool:
+        result = False
+        try:
+            userid = self._cl.user_id_from_username(username)
+            result = True
+        except Exception as e:
+            print(f"[instaBot]>user not found in instagram:={e}")
+        finally:
+            return result
 
     def follow_by_username(self, username) -> bool:
         """
@@ -104,7 +117,7 @@ class Bot:
         """
         return self._cl.user_following(self._cl.user_id, amount=amount)
 
-    def get_following_usernames(self, amount: int = 0) -> List[str]:
+    def get_following_usernames(self, userID, amount: int = 0) -> List[str]:
         """
         Get bot's followed usernames
 
@@ -118,7 +131,7 @@ class Bot:
         List[str]
             List of usernames
         """
-        following = self._cl.user_following(self._cl.user_id, amount=amount)
+        following = self._cl.user_following(userID, amount=amount)
         print("following")
         return [user.username for user in following.values()]
 
@@ -128,7 +141,3 @@ class Bot:
         """
         pass
 
-
-# initialise client
-cl = Client()
-cl.login(config.IG_USERNAME, config.IG_PASSWORD)
