@@ -1,8 +1,9 @@
-
+import datetime
 from database import dbLite
 import requests
 import tweet
 import config
+
 
 def loop():
 
@@ -113,7 +114,7 @@ def compareLists(list1,list2):
     return temp3
 
 if __name__ == '__main__':
-
+    print(f"Bot running on time = {str(datetime.datetime.now())}")
     loop()
 
 

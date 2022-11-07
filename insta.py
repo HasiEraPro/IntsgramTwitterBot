@@ -24,8 +24,8 @@ class Bot:
             self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
             self._cl.dump_settings(config.IG_CREDENTIAL_PATH)
 
-    def is_user_valid(self,username) -> int:
-        result = 0
+    def is_user_valid(self,username) -> str:
+        result = "0"
         try:
             userid = self._cl.user_id_from_username(username)
             result = userid
