@@ -44,11 +44,11 @@ class SqliteDB:
                                    COMBINED_TEXT text
 
                                )''')
-            cur.execute('''INSERT INTO templates (FOLLOW_TEXT,FOLLOW_TEXT,COMBINED_TEXT) 
+            cur.execute('''INSERT INTO templates (FOLLOW_TEXT,FOLLOW_TEXT) 
             VALUES 
             ("{user} has follwed the {followings}",
-              "{user} has unfollowed the {unfollowings} " ,
-              "{user} has followed the {followings} and unfollowed the {unfollowings}" 
+              "{user} has unfollowed the {unfollowings} "
+              
             )''')
             print("template table Created")
         except Exception as e:
