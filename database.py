@@ -40,11 +40,8 @@ class SqliteDB:
             cur.execute('''CREATE TABLE templates (
                                    TEMPL_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                                    FOLLOW_TEXT text,
-                                   FOLLOW_TEXT text,
-                                   COMBINED_TEXT text
-
-                               )''')
-            cur.execute('''INSERT INTO templates (FOLLOW_TEXT,FOLLOW_TEXT) 
+                                   UNFOLLOW_TEXT text )''')
+            cur.execute('''INSERT INTO templates (FOLLOW_TEXT,UNFOLLOW_TEXT) 
             VALUES 
             ("{user} has follwed the {followings}",
               "{user} has unfollowed the {unfollowings} "
@@ -229,15 +226,13 @@ class SqliteDB:
     def addTemplateText(self,followText = None, unfollowText=None,combinationtext=None):
         con = self.createDatabaseConnection()
         cur = con.cursor()
-        print(f"i recived template data follow={followText} unfollow={unfollowText} combi={combinationtext}")
+        print(f"i recived template data follow={followText} unfollow={unfollowText} ")
         try:
-            sql = '''UPDATE templates SET FOLLOW_TEXT=?,UNFOLLOW_TEXT=?,COMBINED_TEXT=? WHERE TEMPL_ID=1'''
-            cur.execute(sql, [followText,unfollowText,combinationtext])
+            sql = '''UPDATE templates SET FOLLOW_TEXT=?,UNFOLLOW_TEXT=? WHERE TEMPL_ID=1'''
+            cur.execute(sql, [followText,unfollowText])
 
             print(f"follow text:={followText} updated in db")
             print(f"unfollow text:={unfollowText} updated in db")
-            print(f"combination text:={combinationtext} updated in db")
-
 
 
         except Exception as e:
