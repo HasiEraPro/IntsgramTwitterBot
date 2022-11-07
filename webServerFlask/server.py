@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, jsonify,Response
 import sys
-from instagrapi.exceptions import UserNotFound
-
-#sys.path.append('/home/h4si/instaBot/IntsgramTwitterBot')
+sys.path.append('/home/h4si/instaBot/IntsgramTwitterBot')
 from database import dbLite
 from insta import Bot
 
