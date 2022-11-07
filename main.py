@@ -24,9 +24,11 @@ def loop():
        #get followings from our API
         query = {'instaID': instaAPIuserID}
         response = requests.get(config.OUR_API_SERVER_FOLLOWINGS_END, params=query)
+        print(f"response from API :- {response}")
         followingActually = response.json()["data"]
-
-
+        error = response.json()["status"]
+        print(f"API following fetch status:{error}")
+        print(f"following list from API:={followingActually}")
 
         #if some user has no records of follwing inside the db
         if len(followinginDB) == 0:
@@ -73,18 +75,6 @@ def loop():
                 #tweet follows people
                 tweet.tweetMessage(replacedVersion2)
 
-                print(f"tweeting Ends")
-
-            # #if unfollwed and followed has been done
-            # elif len(newfollowedPerson) > 0 and len(unfollowedPerson) > 0:
-            #     print(f"user {user} has new followings and unfollowings,starting tweets")
-            #     followedString = ",".join(["@"+x for x in newfollowedPerson])
-            #     unfollowedString = ",".join(["@"+x for x in unfollowedPerson])
-            #
-            #     message = f"{user} has followed {followedString} and unfollowed {unfollowedString}"
-            #     print(f"tweeting this message {message}")
-            #     tweet.tweetMessage(message)
-            #     print(f"tweeting Ends")
 
             #if only new unfollowers are their
             elif len(unfollowedPerson) > 0:

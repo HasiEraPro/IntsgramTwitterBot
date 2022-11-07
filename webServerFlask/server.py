@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, jsonify
+from flask import Flask, render_template, request, url_for, redirect, flash, jsonify,Response
 import sys
 from instagrapi.exceptions import UserNotFound
 
@@ -16,20 +16,25 @@ def getfollowings():
     # take all following people of the users using above instagram API
     oncomingID = request.args.get('instaID',default=None,type=str)
     followingActually =[]
+    status = ""
     print(f"oncomingID {oncomingID}")
     if oncomingID:
         try:
 
             followingActually = instaBot.get_following_usernames(oncomingID,7500)
 
-            return jsonify({"data":followingActually,"error":"None"})
+            if len(followingActually) > 0:
+                status = "ok"
+            else:
+                status = "no followings"
 
         except  Exception as e:
             print("error fetching following people of the user")
-            return jsonify({"data":"None","error":e})
-
+            status = "server exception"
+        finally:
+            return {"data": followingActually, "status": status}
     else:
-        return jsonify({"data": "None", "error": "empty request"})
+        return {"data":followingActually, "status" : "empty request"}
 
 @app.route('/',methods=('GET', 'POST'))
 def home():
@@ -51,7 +56,8 @@ def home():
             instauserID = instaBot.is_user_valid(instaName)
 
 
-            if(instauserID):
+            if(len(instauserID)  > 3):
+                print("user is a valid user")
                 try:
 
                     # if true there is a error,false if not
@@ -99,4 +105,4 @@ if __name__ == '__main__':
     instaBot = Bot()
     # run() method of Flask class runs the application
     # on the local development server.
-    app.run()
+    app.run(use_reloader=False)

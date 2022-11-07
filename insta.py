@@ -24,11 +24,11 @@ class Bot:
             self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
             self._cl.dump_settings(config.IG_CREDENTIAL_PATH)
 
-    def is_user_valid(self,username) -> bool:
-        result = False
+    def is_user_valid(self,username) -> int:
+        result = 0
         try:
             userid = self._cl.user_id_from_username(username)
-            result = True
+            result = userid
         except Exception as e:
             print(f"[instaBot]>user not found in instagram:={e}")
         finally:
