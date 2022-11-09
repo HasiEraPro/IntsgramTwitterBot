@@ -1,5 +1,5 @@
 import os
-from time import sleep
+import time
 from typing import Dict, List
 from instagrapi import Client
 from instagrapi.types import UserShort
@@ -20,7 +20,9 @@ class Bot:
             print("insta bot using ig settings file")
             self._cl.load_settings(config.IG_CREDENTIAL_PATH)
             self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
+
         else:
+            print("insta bot using name and password")
             self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
             self._cl.dump_settings(config.IG_CREDENTIAL_PATH)
 
@@ -68,7 +70,7 @@ class Bot:
         userid = self._cl.user_id_from_username(username)
         return self._cl.user_unfollow(userid)
 
-    def get_followers(self, amount: int = 0) -> Dict[int, UserShort]:
+    def get_followers(self, userID:str ,amount: int = 0) -> Dict[str, UserShort]:
         """
         Get bot's followers
 
@@ -82,9 +84,9 @@ class Bot:
         Dict[int, UserShort]
             Dict of user_id and User object
         """
-        return self._cl.user_followers(self._cl.user_id, amount=amount)
+        return self._cl.user_followers(userID, amount=amount)
 
-    def get_followers_usernames(self, amount: int = 0) -> List[str]:
+    def get_followers_usernames(self,userID:str,amount: int = 0) -> List[str]:
         """
         Get bot's followers usernames
 
@@ -98,10 +100,10 @@ class Bot:
         List[str]
             List of usernames
         """
-        followers = self._cl.user_followers(self._cl.user_id, amount=amount)
+        followers = self._cl.user_followers(userID, amount=amount)
         return [user.username for user in followers.values()]
 
-    def get_following(self, amount: int = 0) -> Dict[int, UserShort]:
+    def get_following(self, userID:str,amount: int = 0) -> Dict[str, UserShort]:
         """
         Get bot's followed users
 
@@ -115,9 +117,9 @@ class Bot:
         Dict[int, UserShort]
             Dict of user_id and User object
         """
-        return self._cl.user_following(self._cl.user_id, amount=amount)
+        return self._cl.user_following(userID, amount=amount)
 
-    def get_following_usernames(self, userID, amount: int = 0) -> List[str]:
+    def get_following_usernames(self, userID:str , amount: int = 0) -> List[str]:
         """
         Get bot's followed usernames
 
@@ -131,9 +133,14 @@ class Bot:
         List[str]
             List of usernames
         """
-        following = self._cl.user_following(userID, amount=amount)
-        print("following")
-        return [user.username for user in following.values()]
+
+        try:
+            following = self._cl.user_following(userID, amount=amount)
+            return [user.username for user in following.values()]
+
+        except Exception as e:
+            print(f"insta following module:={e}")
+            return []
 
     def update(self):
         """

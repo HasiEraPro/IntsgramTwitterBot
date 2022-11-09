@@ -114,8 +114,13 @@ def compareLists(list1,list2):
     return temp3
 
 if __name__ == '__main__':
-    print(f"Bot running on time = {str(datetime.datetime.now())}")
-    loop()
-
+    # print(f"Bot running on time = {str(datetime.datetime.now())}")
+    # loop()
+    # get followings from our API
+    query = {'instaID': '18428658'}
+    response = requests.get(config.OUR_API_SERVER_FOLLOWINGS_END, params=query)
+    print(f"response from API :- {response}")
+    followingActually = response.json()["data"]
+    print(followingActually)
 
 
