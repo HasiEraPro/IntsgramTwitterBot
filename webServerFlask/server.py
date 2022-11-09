@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, jsonify,Response
 import sys
-sys.path.append('/home/h4si/instaBot/IntsgramTwitterBot')
+#sys.path.append('/home/h4si/instaBot/IntsgramTwitterBot')
+sys.path.append(r'E:\Projects\FiverProj\python_instagram_twitter_following_bot\Code\IntsgramTwitterBot')
 from database import dbLite
 from insta import Bot
 
@@ -30,8 +31,8 @@ def getfollowings():
                 status = "no followings"
 
         except  Exception as e:
-            print("error fetching following people of the user")
-            status = "server exception"
+            print(f"error fetching following people of the user:={e}")
+            status = f"server exception:={e}"
         finally:
             return {"data": followingActually, "status": status}
     else:
