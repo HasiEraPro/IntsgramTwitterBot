@@ -12,24 +12,35 @@ SLEEP_TIME = '600'  # in seconds
 
 class Bot:
     _cl = None
+    loggedIn = False
 
     def __init__(self):
         self._cl = Client()
         print(f"iq settings file in {config.IG_CREDENTIAL_PATH}  {os.path.exists(config.IG_CREDENTIAL_PATH)}")
         if os.path.exists(config.IG_CREDENTIAL_PATH):
             print("insta bot using ig settings file")
-            self._cl.load_settings(config.IG_CREDENTIAL_PATH)
-            self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
+            try:
+                self._cl.load_settings(config.IG_CREDENTIAL_PATH)
+                self._cl.set_proxy("http://projectinstabot:cuomgSJyAd@74.80.255.198:50100")
+                self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
+                print("logged in successfully to insta.....[ok]")
+                self.loggedIn = True
 
+            except Exception as e:
+                self.loggedIn = False
+                print(e)
         else:
             print("insta bot using name and password")
+
 
             try:
                 self._cl.set_proxy("http://projectinstabot:cuomgSJyAd@74.80.255.198:50100")
                 self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
                 #self._cl.dump_settings(config.IG_CREDENTIAL_PATH)
                 print("logged in successfully to insta.....[ok]")
+                self.loggedIn = True
             except Exception as e:
+                self.loggedIn = False
                 print(e)
 
     def is_user_valid(self,username) -> str:

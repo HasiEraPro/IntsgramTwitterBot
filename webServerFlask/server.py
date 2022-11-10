@@ -11,7 +11,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 #create the object here too ,because in gunicorn this app imports,so "if __name__" part not runs
 #but in development its ok to have that above part
 
-
+instaBot  = insta.Bot()
 
 @app.route('/getFollowings')
 def getfollowings():
@@ -103,8 +103,8 @@ def home():
 
 #main driver function
 if __name__ == '__main__':
-
-    instaBot = insta.Bot()
+    pass
+    #instaBot = insta.Bot()
     # run() method of Flask class runs the application
     # on the local development server.
-    app.run(use_reloader=False)
+    #app.run(use_reloader=False)
