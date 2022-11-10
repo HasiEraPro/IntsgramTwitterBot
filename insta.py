@@ -23,8 +23,14 @@ class Bot:
 
         else:
             print("insta bot using name and password")
-            self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
-            self._cl.dump_settings(config.IG_CREDENTIAL_PATH)
+
+            try:
+                self._cl.set_proxy("http://projectinstabot:cuomgSJyAd@74.80.255.198:50100")
+                self._cl.login(config.IG_USERNAME, config.IG_PASSWORD)
+                #self._cl.dump_settings(config.IG_CREDENTIAL_PATH)
+                print("logged in successfully to insta.....[ok]")
+            except Exception as e:
+                print(e)
 
     def is_user_valid(self,username) -> str:
         result = "0"

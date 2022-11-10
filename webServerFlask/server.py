@@ -3,7 +3,7 @@ import sys
 #sys.path.append('/home/h4si/instaBot/IntsgramTwitterBot')
 sys.path.append(r'E:\Projects\FiverProj\python_instagram_twitter_following_bot\Code\IntsgramTwitterBot')
 from database import dbLite
-from insta import Bot
+import insta
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -11,7 +11,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 #create the object here too ,because in gunicorn this app imports,so "if __name__" part not runs
 #but in development its ok to have that above part
 
-instaBot = Bot()
+
 
 @app.route('/getFollowings')
 def getfollowings():
@@ -104,7 +104,7 @@ def home():
 #main driver function
 if __name__ == '__main__':
 
-    instaBot = Bot()
+    instaBot = insta.Bot()
     # run() method of Flask class runs the application
     # on the local development server.
     app.run(use_reloader=False)
